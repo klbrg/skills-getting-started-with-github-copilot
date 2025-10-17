@@ -27,6 +27,70 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
         `;
 
+        // Participants section
+        const participantsSection = document.createElement('div');
+        participantsSection.className = 'participants-section';
+
+        const header = document.createElement('div');
+        header.className = 'participants-header';
+        header.textContent = 'Participants';
+        participantsSection.appendChild(header);
+
+        if (details.participants && details.participants.length) {
+          const ul = document.createElement('ul');
+          ul.className = 'participants-list';
+
+          details.participants.forEach((p) => {
+            const li = document.createElement('li');
+            li.className = 'participant-item';
+
+            // participant text
+            const span = document.createElement('span');
+            span.textContent = p;
+
+            // delete button (icon)
+            const del = document.createElement('button');
+            del.className = 'participant-delete';
+            del.title = 'Unregister participant';
+            del.innerHTML = '✖';
+            del.addEventListener('click', async () => {
+              // disable while processing
+              del.disabled = true;
+              try {
+                const resp = await fetch(`/activities/${encodeURIComponent(name)}/participants/${encodeURIComponent(p)}`, {
+                  method: 'DELETE'
+                });
+
+                if (resp.ok) {
+                  // refresh activities to update UI
+                  await fetchActivities();
+                } else {
+                  const err = await resp.json().catch(() => ({}));
+                  alert(err.detail || 'Failed to remove participant');
+                  del.disabled = false;
+                }
+              } catch (e) {
+                console.error('Error removing participant', e);
+                alert('Failed to remove participant');
+                del.disabled = false;
+              }
+            });
+
+            li.appendChild(span);
+            li.appendChild(del);
+            ul.appendChild(li);
+          });
+
+          participantsSection.appendChild(ul);
+        } else {
+          const empty = document.createElement('p');
+          empty.className = 'participants-empty';
+          empty.textContent = 'No participants yet.';
+          participantsSection.appendChild(empty);
+        }
+
+        activityCard.appendChild(participantsSection);
+
         activitiesList.appendChild(activityCard);
 
         // Add option to select dropdown

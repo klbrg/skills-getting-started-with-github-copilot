@@ -162,9 +162,10 @@ footer {
 
 /* Nice bulleted list */
 .participants-list {
-  list-style: disc;
+  list-style: none;
+  /* hide bullets */
   margin: 0;
-  padding-left: 20px;
+  padding-left: 0;
   color: #243b55;
   font-size: 0.92rem;
 }
@@ -174,9 +175,35 @@ footer {
   transition: background 0.12s ease;
 }
 
+.participant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .participant-item:hover {
   background: rgba(11, 83, 148, 0.04);
   border-radius: 4px;
+}
+
+.participant-delete {
+  background: transparent;
+  border: none;
+  color: #c62828;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.participant-delete:hover {
+  background: rgba(198, 40, 40, 0.06);
+}
+
+.participant-delete:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 /* Empty state */
